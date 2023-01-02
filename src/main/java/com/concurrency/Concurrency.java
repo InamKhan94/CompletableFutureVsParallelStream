@@ -3,11 +3,8 @@ package com.concurrency;
 import java.util.List;
 
 public interface Concurrency {
-	public void useSequential(List<MyTask> tasks);
-
-	public void useParallelStream(List<MyTask> tasks);
-
-	public void useCompletableFuture(List<MyTask> tasks);
-
-	public void useCompletableFutureWithExecutor(List<MyTask> tasks);
+	void useSequential(List<MyTask> tasks);
+	void useCompletableFuture(List<MyTask> tasks);
+	void useCompletableFutureWithExecutor(List<MyTask> tasks, int threadCount);
+	void useParallelStream(List<MyTask> tasks);
 }

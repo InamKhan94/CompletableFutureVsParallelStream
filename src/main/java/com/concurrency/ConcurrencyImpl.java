@@ -15,8 +15,8 @@ public class ConcurrencyImpl implements Concurrency {
 
 		Instant startTime = Instant.now();
 		List<Integer> result = tasks.stream()
-					.map(MyTask::calculate)
-					.collect(Collectors.toList());
+				.map(MyTask::calculate)
+				.collect(Collectors.toList());
 
 		Instant endTime = Instant.now();
 		printDuration(tasks, startTime, endTime);
@@ -27,8 +27,8 @@ public class ConcurrencyImpl implements Concurrency {
 
 		Instant startTime = Instant.now();
 		List<Integer> result = tasks.parallelStream()
-					.map(MyTask::calculate)
-					.collect(Collectors.toList());
+				.map(MyTask::calculate)
+				.collect(Collectors.toList());
 
 		Instant endTime = Instant.now();
 		printDuration(tasks, startTime, endTime);
@@ -39,41 +39,39 @@ public class ConcurrencyImpl implements Concurrency {
 
 		Instant startTime = Instant.now();
 		List<CompletableFuture<Integer>> futures = tasks.stream()
-								.map(tmpTask -> {
-									return CompletableFuture.supplyAsync(() -> {
-										return tmpTask.calculate();
-									});
-								})
-								.collect(Collectors.toList());
+				.map(tmpTask -> {
+					return CompletableFuture.supplyAsync(() -> {
+						return tmpTask.calculate();
+					});
+				})
+				.collect(Collectors.toList());
 
 		List<Integer> result = futures.stream()
-					.map(CompletableFuture::join)
-					.collect(Collectors.toList());
+				.map(CompletableFuture::join)
+				.collect(Collectors.toList());
 
 		Instant endTime = Instant.now();
 		printDuration(tasks, startTime, endTime);
 	}
 
-	public void useCompletableFutureWithExecutor(List<MyTask> tasks) {
+	public void useCompletableFutureWithExecutor(List<MyTask> tasks, int threadCount) {
 		System.out.println("Run CompletableFutures with a custom Executor. \nWait...");
-
-		final int NUM_OF_THREADS = 1000;
 
 		Instant startTime = Instant.now();
 
-		ExecutorService executor = Executors.newFixedThreadPool(Math.min(tasks.size(), NUM_OF_THREADS));
+		ExecutorService executor = Executors.newFixedThreadPool(Math.min(tasks.size(), threadCount));
 
 		List<CompletableFuture<Integer>> futures = tasks.stream()
-								.map(tmpTask -> {
-									return CompletableFuture.supplyAsync(() -> {
-										return tmpTask.calculate();
-									}, executor);
-								})
-								.collect(Collectors.toList());
+				.map(tmpTask -> {
+					return CompletableFuture.supplyAsync(() -> {
+						return tmpTask.calculate();
+					}, executor);
+				})
+				.collect(Collectors.toList());
 
 		List<Integer> result = futures.stream()
-					.map(CompletableFuture::join)
-					.collect(Collectors.toList());
+				.map(CompletableFuture::join)
+				.collect(Collectors.toList());
 
 		Instant endTime = Instant.now();
 		printDuration(tasks, startTime, endTime);
@@ -83,7 +81,7 @@ public class ConcurrencyImpl implements Concurrency {
 
 	private void printDuration(List<MyTask> tasks, Instant start, Instant end) {
 		Duration timeElapsed = Duration.between(start, end);
-		System.out.printf("Processed %d tasks in %d milliseconds\n", tasks.size(), timeElapsed.toMillis());
+		System.out.printf("Processed %d tasks in %d seconds\n", tasks.size(), timeElapsed.toSeconds());
 	}
-
 }
+

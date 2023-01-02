@@ -10,7 +10,6 @@ public class MyTask {
 	}
 
 	public int calculate() {
-
 //		System.out.println(Thread.currentThread().getName());
 		try {
 			TimeUnit.SECONDS.sleep(seconds);
